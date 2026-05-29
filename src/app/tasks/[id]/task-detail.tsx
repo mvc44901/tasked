@@ -10,8 +10,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import type { Task, Application, Message, Review } from '@/lib/types'
-import { Star, Calendar, DollarSign, Send, Loader2, CheckCircle, Clock, Users } from 'lucide-react'
+import type { Task, Application, Message, Review, Profile } from '@/lib/types'
+import { Star, Calendar, DollarSign, Send, Loader2, CheckCircle, Clock, Users, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 
 const STATUS_COLORS: Record<string, string> = {
@@ -45,9 +45,10 @@ interface Props {
   reviews: (Review & { reviewer: any })[]
   currentUserId: string | null
   userApplication: (Application & { freelancer: any }) | null
+  currentUserProfile: Profile | null
 }
 
-export default function TaskDetail({ task, applications, messages, reviews, currentUserId, userApplication }: Props) {
+export default function TaskDetail({ task, applications, messages, reviews, currentUserId, userApplication, currentUserProfile }: Props) {
   const [appMessage, setAppMessage] = useState('')
   const [msgContent, setMsgContent] = useState('')
   const [deliveryMessage, setDeliveryMessage] = useState('')
@@ -385,6 +386,21 @@ export default function TaskDetail({ task, applications, messages, reviews, curr
                       {userApplication.status === 'accepted' ? 'Accepted — waiting for payment' :
                        userApplication.status === 'rejected' ? 'Not selected' : 'Pending review'}
                     </span>
+                  </div>
+                ) : !currentUserProfile?.stripe_onboarded ? (
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3">
+                    <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-amber-800 mb-1">Stripe account required</p>
+                      <p className="text-sm text-amber-700 leading-relaxed mb-3">
+                        You need to connect your Stripe account to receive payments before you can apply.
+                      </p>
+                      <Link href="/profile">
+                        <Button size="sm" variant="outline" className="border-amber-300 text-amber-800 hover:bg-amber-100">
+                          Connect Stripe on your profile
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-3">

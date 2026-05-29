@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   const platformFeeCents = Math.round(amountCents * platformFeePercent)
 
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
+    payment_method_types: ['card', 'link'],
     line_items: [{
       price_data: {
         currency: 'usd',

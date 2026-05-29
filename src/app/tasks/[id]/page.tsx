@@ -37,6 +37,10 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
 
   const userApplication = applications?.find(a => a.freelancer_id === user?.id)
 
+  const { data: currentUserProfile } = user
+    ? await supabase.from('profiles').select('*').eq('id', user.id).single()
+    : { data: null }
+
   return (
     <TaskDetail
       task={task}
@@ -45,6 +49,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
       reviews={reviews ?? []}
       currentUserId={user?.id ?? null}
       userApplication={userApplication ?? null}
+      currentUserProfile={currentUserProfile ?? null}
     />
   )
 }
