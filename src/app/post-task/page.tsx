@@ -58,7 +58,7 @@ export default function PostTaskPage() {
       description: form.description.trim(),
       category: form.category,
       budget: parseFloat(form.budget),
-      deadline: form.deadline || null,
+      deadline: form.deadline && /^\d{4}-\d{2}-\d{2}$/.test(form.deadline) ? form.deadline : null,
     }).select().single()
 
     if (error) {
